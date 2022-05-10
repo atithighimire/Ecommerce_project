@@ -32,8 +32,5 @@
 
 </body>
 
-<script>
-
-</script>
 
 </html>

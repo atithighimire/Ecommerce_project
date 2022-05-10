@@ -18,14 +18,14 @@
   <?php
   if (!empty($_SESSION['login'])) {
   ?>
-    <?php include '../owner/navbar.php'; ?>
+    <?php include '../hr/navbar.php'; ?>
 
   <?php } else { ?>
-    <?php include '../owner/mainBar.php'; ?>
+    <?php include '../hr/mainBar.php'; ?>
 
   <?php } ?>
 
-  <?php include '../owner/login.php'; ?>
+  <?php include '../hr/login.php'; ?>
   <?php include 'footer.php'; ?>
 </body>
 

@@ -2,7 +2,7 @@
 
 include 'connection.php';
 $id = $_POST['id'];
-$query = "SELECT * FROM users WHERE id='$id'";
+$query = "SELECT * FROM employee WHERE employeeid='$id'";
 $result = mysqli_query($conn,  $query);
 $category = mysqli_fetch_array($result);
 

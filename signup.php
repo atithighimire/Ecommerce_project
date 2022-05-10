@@ -1,15 +1,6 @@
 <?php
 session_start();
-error_reporting(0);
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "raritan_valley_ecom";
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+include 'connection.php';
 
 if (isset($_POST['submit'])) {
     $name = $_POST['fullname'];
@@ -17,14 +8,25 @@ if (isset($_POST['submit'])) {
     $contactno = $_POST['contactno'];
     $shippingAddress = $_POST['shippingAddress'];
     $password = md5($_POST['password']);
-    $query = mysqli_query($conn, "insert into users(name,email,contactno,password,shippingAddress) values('$name','$email','$contactno','$password','$shippingAddress')");
-    if ($query) {
-        echo "<script>alert('User has been Registered Please Login ');</script>";
-        header("Location: index.php");
-        exit();
+    $result = "SELECT count(*) FROM users WHERE email=?";
+    $stmt = $conn->prepare($result);
+    $stmt->bind_param('s', $email);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
+    if ($count > 0) {
+        echo "<script>alert('Email id already associated with another account. Please try with diffrent EmailId.');</script>";
     } else {
-        echo "<script>alert('Not register something went worng');</script>";
-        exit();
+        $stmti = $conn->prepare("INSERT into users (name,email,contactno,password,shippingAddress) VALUES (?, ? , ? , ? , ?)");
+        $stmti->bind_param('ssiss', $name, $email, $contactno, $password, $shippingAddress);
+        if (!$stmti->execute()) {
+            trigger_error("there was an error...." . $conn->error, E_USER_WARNING);
+        } else {
+            echo "<script>alert('User has been Registered Please Login ');</script>";
+            header("Location: index.php");
+            $stmti->close();
+        }
     }
 }
 

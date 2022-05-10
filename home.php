@@ -1,14 +1,10 @@
 <?php
 session_start();
 error_reporting(0);
-
-
 include 'connection.php';
 if (isset($_GET['action']) && $_GET['action'] == "add") {
-
     $id = intval($_GET['id']);
     if (isset($_SESSION['cart'][$id])) {
-
         $_SESSION['cart'][$id]['quantity']++;
         echo "<script>alert('Product has been updated to the cart')</script>";
         echo "<script type='text/javascript'> document.location ='cart.php'; </script>";
@@ -24,21 +20,16 @@ if (isset($_GET['action']) && $_GET['action'] == "add") {
         }
     }
 }
-
-
-
 ?>
 
 
 <?php include 'navbar.php'; ?>
-
 <!doctype html>
 <html lang="en">
 
 <head>
 
     <head>
-
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -48,10 +39,6 @@ if (isset($_GET['action']) && $_GET['action'] == "add") {
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-
-
-
-
     </head>
 </head>
 
@@ -116,20 +103,13 @@ if (isset($_GET['action']) && $_GET['action'] == "add") {
                             </li>
                         <?php } ?>
                     </ul>
-                    <!-- <form class="form-inline"> -->
-                    <!-- <div class="md-form my-0">
-                            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                        </div> -->
 
                     <form name="search" method="post" action="search-result.php">
                         <div class="input-group">
-                            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" name="product"  aria-describedby="search-addon" />
+                            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" name="product" aria-describedby="search-addon" />
                             <button type="button" class="btn btn-outline-primary">search</button>
                         </div>
                     </form>
-
-
-                    <!-- </form> -->
                 </div>
 
             </nav>
@@ -217,32 +197,12 @@ if (isset($_GET['action']) && $_GET['action'] == "add") {
                             <div class="col-sm-6 col-md-4 wow fadeInUp">
                                 <h3>No Product Found</h3>
                             </div>
-
                         <?php } ?>
                     <?php } ?>
-
-
                 </div>
             </section>
-
-
-
-
-
-
-
-
-
         </div>
     </main>
-    <!--Main layout-->
-
-
-
-
-
-
-
 </body>
 <?php include 'footer.php'; ?>
 

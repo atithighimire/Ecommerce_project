@@ -11,17 +11,16 @@ if (strlen($_SESSION['login']) == 0) {
     $success = '';
 
     if (isset($_POST['submit'])) {
-
         $fullname = $_POST['fullname'];
         $email = $_POST['email'];
         $contactno = $_POST['contactno'];
-        $password = md5($_POST['password']);
-        $shippingAddress = $_POST['shippingAddress'];
+        $salary = $_POST['salary'];
+        $address = $_POST['address'];
 
-        $query = mysqli_query($conn, "insert into users(name,email,contactno,password,shippingAddress) values('$fullname','$email','$contactno','$password','$shippingAddress')");
+        $query = mysqli_query($conn, "insert into employee(employeeName,email,number,salary,address) values('$fullname','$email','$contactno','$salary','$address')");
         if ($query) {
-            echo "<script>alert('User has been Registered Please Login ');</script>";
-            header("Location: manageUsers.php");
+            echo "<script>alert('Employee has been Registered');</script>";
+            header("Location: manageEmployee.php");
             exit();
         } else {
             echo "<script>alert('Not register something went worng');</script>";
@@ -35,13 +34,15 @@ if (strlen($_SESSION['login']) == 0) {
         $fullname = $_POST['fullname'];
         $email = $_POST['email'];
         $contactno = $_POST['contactno'];
-        $shippingAddress = $_POST['shippingAddress'];
-        $id = $_POST['id'];
-        $sql = "update users set name ='$fullname' , email='$email',   contactno='$contactno', shippingAddress='$shippingAddress' where id='$id' ";
+        $salary = $_POST['salary'];
+        $address = $_POST['address'];
+        $id = $_POST['employeeid'];
+
+        $sql = "update employee set employeeName ='$fullname' , email='$email',   number='$contactno', salary='$salary' , address='$address' where employeeid='$id' ";
 
         if (mysqli_query($conn, $sql)) {
             $success = 'Record edited';
-            header("Location: manageUsers.php");
+            header("Location: manageEmployee.php");
             exit();
         } else {
             echo "Error: " . $sql . " " . mysqli_error($conn);
@@ -50,23 +51,19 @@ if (strlen($_SESSION['login']) == 0) {
 
 
     if (isset($_POST['deleteItem'])) {
-        $id = $_POST['id'];
-        $sql = "DELETE FROM users WHERE id = '$id' ";
+        $id = $_POST['employeeid'];
+        $sql = "DELETE FROM employee WHERE employeeid = '$id' ";
         mysqli_query($conn, $sql);
         if (mysqli_query($conn, $sql)) {
-            $success = 'Users Deleted';
-            header("Location: manageUsers.php");
+            $success = 'Employee Deleted';
+            header("Location: manageEmployee.php");
             exit();
         } else {
             echo "Error: " . $sql . mysqli_error($conn);
         }
     }
-
-
 ?>
-
     <?php include('include/../navbar.php'); ?>
-
     <html>
 
     <head>
@@ -92,21 +89,21 @@ if (strlen($_SESSION['login']) == 0) {
 
         $(document).on('click', '.edit', function() {
             var id = $(this).data('id');
-            console.log(id)
             $.ajax({
                 type: "POST",
-                url: "fetchUser.php",
+                url: "fetchEmployee.php",
                 data: {
                     id: id
                 },
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data.name)
-                    $('#fullname').val(data.name);
+                    console.log(data)
+                    $('#fullname').val(data.employeeName);
                     $('#email').val(data.email);
-                    $('#contactno').val(data.contactno);
-                    $('#shippingAddress').val(data.shippingAddress);
-                    $('#id').val(data.id)
+                    $('#contactno').val(data.number);
+                    $('#address').val(data.address);
+                    $('#salary').val(data.salary);
+                    $('#id').val(data.employeeid)
 
                 }
             });
@@ -130,10 +127,10 @@ if (strlen($_SESSION['login']) == 0) {
                     <div class="table-title">
                         <div class="row">
                             <div class="col-sm-6">
-                                <h2>Manage <b>Users</b></h2>
+                                <h2>Manage <b> Employees</b></h2>
                             </div>
                             <div class="col-sm-6">
-                                <a href="#addUser" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Users</span></a>
+                                <a href="#addUser" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Employees</span></a>
                             </div>
                         </div>
                     </div>
@@ -146,34 +143,38 @@ if (strlen($_SESSION['login']) == 0) {
                     <table id="example" class="display" style="width:100%">
                         <thead>
                             <tr>
-                                <th> Id</th>
-                                <th>User Name</th>
+                                <th>Employee Id</th>
+                                <th>Employee Name</th>
                                 <th> Email</th>
                                 <th>Contact Number</th>
-                                <th> Registration Date</th>
+                                <th> Salary</th>
+                                <th> Address</th>
+                                <th> Joined Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             <?php
-                            $query = "select * from users";
+                            $query = "select * from employee";
                             $result = mysqli_query($conn, $query);
 
 
                             while ($row = mysqli_fetch_array($result)) {
                             ?>
                                 <tr>
-                                    <td><?= $row['id']; ?></td>
-                                    <td><?= $row['name']; ?></td>
+                                    <td><?= $row['employeeid']; ?></td>
+                                    <td><?= $row['employeeName']; ?></td>
                                     <td><?= $row['email']; ?></td>
-                                    <td><?= $row['contactno']; ?></td>
+                                    <td><?= $row['number']; ?></td>
+                                    <td><?= $row['salary']; ?></td>
+                                    <td><?= $row['address']; ?></td>
                                     <td><?= $row['regDate']; ?></td>
                                     <td>
 
-                                        <a class="edit" name="edit" data-target="#editUser" id="edit" data-id="<?php echo $row["id"]; ?>" data-toggle="modal">
+                                        <a class="edit" name="edit" data-target="#editUser" id="edit" data-id="<?php echo $row["employeeid"]; ?>" data-toggle="modal">
                                             <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                                        <a href="#deleteUser" class="delete" data-toggle="modal" id="delete" data-id="<?php echo $row["id"]; ?>"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                                        <a href="#deleteUser" class="delete" data-toggle="modal" id="delete" data-id="<?php echo $row["employeeid"]; ?>"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
                                     </td>
                                 </tr>
 
@@ -195,7 +196,7 @@ if (strlen($_SESSION['login']) == 0) {
                 <div class="modal-content">
                     <form method="post">
                         <div class="modal-header">
-                            <h4 class="modal-title">Add Users</h4>
+                            <h4 class="modal-title">Add Employee</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">
@@ -216,14 +217,15 @@ if (strlen($_SESSION['login']) == 0) {
 
 
                             <div class="form-group">
-                                <label>Password </label>
-                                <input type="password" class="form-control form-control-lg" name="password" />
+                                <label>Salary </label>
+                                <input type="number" class="form-control form-control-lg" name="salary" />
                             </div>
 
                             <div class="form-group">
-                                <label>Shipping Address </label>
-                                <input type="text" name="shippingAddress" class="form-control form-control-lg" required />
+                                <label> Address </label>
+                                <input type="text" name="address" class="form-control form-control-lg" required />
                             </div>
+
                         </div>
 
                         <div class="modal-footer">
@@ -241,17 +243,17 @@ if (strlen($_SESSION['login']) == 0) {
                 <div class="modal-content">
                     <form method="post">
                         <div class="modal-header">
-                            <h4 class="modal-title">Edit Users</h4>
+                            <h4 class="modal-title">Edit Employees</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
 
 
                         <div class="modal-body">
-                            <input type="hidden" id="id" name="id" value="">
+                            <input type="hidden" id="id" name="employeeid" value="">
 
                             <div class="form-group">
                                 <label>Full Name</label>
-                                <input type="text" id="fullname" name="fullname" class="form-control form-control-lg" required />
+                                <input type="text" name="fullname" id=fullname class="form-control form-control-lg" required />
                             </div>
 
                             <div class="form-group">
@@ -261,14 +263,20 @@ if (strlen($_SESSION['login']) == 0) {
 
                             <div class="form-group">
                                 <label>Contact Number </label>
-                                <input type="number" class="form-control form-control-lg" id="contactno" name="contactno" maxlength="10" required />
+                                <input type="number" class="form-control form-control-lg" name="contactno" id="contactno" maxlength="10" required />
                             </div>
 
 
                             <div class="form-group">
-                                <label>Shipping Address </label>
-                                <input type="text" id="shippingAddress" name="shippingAddress" class="form-control form-control-lg" required />
+                                <label>Salary </label>
+                                <input type="number" class="form-control form-control-lg" name="salary" id="salary"/>
                             </div>
+
+                            <div class="form-group">
+                                <label> Address </label>
+                                <input type="text" name="address" class="form-control form-control-lg"   id="address" required/>
+                            </div>
+
                         </div>
 
 
@@ -296,7 +304,7 @@ if (strlen($_SESSION['login']) == 0) {
                             <p class="text-warning"><small>This action cannot be undone.</small></p>
                         </div>
                         <div class="modal-footer">
-                            <input type="hidden" id="deleteId" name="id" value="">
+                            <input type="hidden" id="deleteId" name="employeeid" value="">
 
                             <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
                             <input type="submit" class="btn btn-danger" value="Delete" name="deleteItem">

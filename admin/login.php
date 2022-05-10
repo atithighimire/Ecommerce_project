@@ -3,17 +3,16 @@ session_start();
 error_reporting(0);
 
 include 'connection.php';
-
-
 //Login code for admin
-
 if (isset($_POST['submit'])) {
   $username = $_POST['username'];
   $password = md5($_POST['password']);
-  $query = mysqli_query($conn, "SELECT * FROM admin WHERE username='$username' and password='$password'");
-  $num = mysqli_fetch_array($query);
-
-  if ($num > 0) {
+  $stmt = $conn->prepare("SELECT * FROM admin WHERE (username=? || password=?)");
+  $stmt->bind_param("ss", $username, $password);
+  $stmt->execute();
+  $rs = $stmt->fetch();
+  $stmt->close();
+  if ($rs) {
     $extra = "categories.php";
     $_SESSION['login'] = $_POST['username'];
     $_SESSION['id'] = $num['id'];

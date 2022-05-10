@@ -19,14 +19,10 @@
             <ul class="navbar-nav mr-auto">
 
                 <li class="nav-item ml-2 ">
-                    <a class="nav-link" href="manageUsers.php" style="color: white;">Manage Users</a>
+                    <a class="nav-link" href="manageEmployee.php" style="color: white;">Manage Employee</a>
                 </li>
-
-                <li class="nav-item ml-2 ">
-                    <a class="nav-link" href="manageAdmin.php" style="color: white;">Manage Admins</a>
-                </li>
-
             </ul>
+
             <form class="form-inline my-2 my-lg-0">
                 <a href="logout.php" style="color: white; text-decoration:none">
                     <i class="fas fa-sign-out-alt fa-1x me-3 " style="color: #ff6219;"></i>

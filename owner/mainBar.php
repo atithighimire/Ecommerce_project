@@ -23,6 +23,9 @@
             <form class="float-right ml-3">
                 <a href="../admin/index.php" class="btn btn-success">Admin Portal</a>
             </form>
+            <form class="float-right ml-3">
+                <a href="../hr/index.php" class="btn btn-success">HR Portal</a>
+            </form>
         </div>
     </nav>
 
