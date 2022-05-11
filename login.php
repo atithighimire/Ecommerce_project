@@ -1,9 +1,9 @@
 <?php
 session_start();
-// error_reporting(0);
+error_reporting(0);
 include 'connection.php';
 
-//Login code
+
 if (isset($_POST['submit'])) {
   $email = $_POST['email'];
   $password = md5($_POST['password']);
@@ -13,20 +13,24 @@ if (isset($_POST['submit'])) {
   $result = $stmt->get_result();
   $row = mysqli_fetch_array($result);
 
+
   if (mysqli_num_rows($result) == 1) {
-    $extra = "home.php";
     $_SESSION['login'] = $_POST['email'];
-    $_SESSION['id'] = ['id'];
+    $_SESSION['id'] = $row['id'];
     $host = $_SERVER['HTTP_HOST'];
     $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    header("location:http://$host$uri/$extra");
+    echo '<script>window.location.href = "https://'.$host.$uri.'/home.php";</script>';
     $stmt->close();
     exit();
   } else {
     $_SESSION['errmsg'] = "Invalid userid id or Password";
   }
 }
+
+
 ?>
+
+
 
 
 
@@ -34,7 +38,9 @@ if (isset($_POST['submit'])) {
 <!doctype html>
 <html lang="en">
 
+
 <body>
+
   <section class="mt-1 mb-5">
     <div class="container py-4 h-90 ">
       <div class="row d-flex justify-content-center align-items-center h-100 mt-4">
@@ -64,7 +70,7 @@ if (isset($_POST['submit'])) {
                     </span>
 
                     <div class="form-outline mb-4">
-                      <label class="form-label" for="form2Example17">User Name</label>
+                      <label class="form-label" for="form2Example17">Email</label>
                       <input type="text" class="form-control form-control-lg" name="email" id="email" />
                     </div>
 
@@ -72,14 +78,22 @@ if (isset($_POST['submit'])) {
                       <label class="form-label" for="form2Example27">Password</label>
                       <input type="password" id="password" class="form-control form-control-lg" name="password" />
                     </div>
+
+                    
+
                     <div class="pt-1 mb-4">
                       <button class="btn btn-dark btn-lg btn-block" type="submit" name="submit">Login</button>
                     </div>
+
+
                     <a class="small text-muted" href="#!">Forgot password?</a>
                     <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a href="signup.php">Register here</a></p>
                     <a href="#!" class="small text-muted">Terms of use.</a>
                     <a href="#!" class="small text-muted">Privacy policy</a>
+
+
                   </form>
+
                 </div>
               </div>
             </div>

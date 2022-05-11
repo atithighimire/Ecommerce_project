@@ -1,6 +1,6 @@
 <?php
 session_start();
-error_reporting(0);
+// error_reporting(0);
 include 'connection.php';
 
 
@@ -16,15 +16,19 @@ if (strlen($_SESSION['login']) == 0) {
         $contactno = $_POST['contactno'];
         $salary = $_POST['salary'];
         $address = $_POST['address'];
-
-        $query = mysqli_query($conn, "insert into employee(employeeName,email,number,salary,address) values('$fullname','$email','$contactno','$salary','$address')");
-        if ($query) {
-            echo "<script>alert('Employee has been Registered');</script>";
-            header("Location: manageEmployee.php");
+        $sql = "INSERT INTO employee (employeeName,email,number,salary,address) VALUES (?, ?, ?,?,?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssss", $fullname,$email, $contactno, $salary, $address);
+        if ($stmt->execute()) {
+              echo "<script type='text/javascript'>
+           alert('Employee has been added !!!');
+            window.location='manageEmployee.php';
+        </script>";
             exit();
         } else {
-            echo "<script>alert('Not register something went worng');</script>";
-            exit();
+             echo "<script>alert('Not register something went worng');</script>";
+            echo "Error: " . $sql . mysqli_error($conn);
+             exit();
         }
     }
 
@@ -38,28 +42,39 @@ if (strlen($_SESSION['login']) == 0) {
         $address = $_POST['address'];
         $id = $_POST['employeeid'];
 
-        $sql = "update employee set employeeName ='$fullname' , email='$email',   number='$contactno', salary='$salary' , address='$address' where employeeid='$id' ";
+        $sql = "UPDATE  employee set employeeName = ? ,email= ? ,number =? ,salary=? ,address =?  WHERE employeeid = ? ";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssss", $fullname,$email, $contactno, $salary, $address,$id);
 
-        if (mysqli_query($conn, $sql)) {
-            $success = 'Record edited';
-            header("Location: manageEmployee.php");
+   if ($stmt->execute()) {
+              echo "<script type='text/javascript'>
+           alert('Employee has been edited !!!');
+            window.location='manageEmployee.php';
+        </script>";
             exit();
         } else {
-            echo "Error: " . $sql . " " . mysqli_error($conn);
+             echo "<script>alert('Not register something went worng');</script>";
+            echo "Error: " . $sql . mysqli_error($conn);
+             exit();
         }
     }
 
 
     if (isset($_POST['deleteItem'])) {
         $id = $_POST['employeeid'];
-        $sql = "DELETE FROM employee WHERE employeeid = '$id' ";
-        mysqli_query($conn, $sql);
-        if (mysqli_query($conn, $sql)) {
-            $success = 'Employee Deleted';
-            header("Location: manageEmployee.php");
+        $sql = "DELETE FROM employee WHERE employeeid = ? ";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s",$id);
+       if ($stmt->execute()) {
+              echo "<script type='text/javascript'>
+           alert('Employee has been deleted !!!');
+            window.location='manageEmployee.php';
+        </script>";
             exit();
         } else {
+             echo "<script>alert('Something went worng');</script>";
             echo "Error: " . $sql . mysqli_error($conn);
+             exit();
         }
     }
 ?>
@@ -135,11 +150,6 @@ if (strlen($_SESSION['login']) == 0) {
                         </div>
                     </div>
 
-                    <?php
-                    $query = "select * from users";
-                    $result = mysqli_query($conn, $query);
-
-                    ?>
                     <table id="example" class="display" style="width:100%">
                         <thead>
                             <tr>
@@ -158,8 +168,6 @@ if (strlen($_SESSION['login']) == 0) {
                             <?php
                             $query = "select * from employee";
                             $result = mysqli_query($conn, $query);
-
-
                             while ($row = mysqli_fetch_array($result)) {
                             ?>
                                 <tr>
@@ -171,7 +179,6 @@ if (strlen($_SESSION['login']) == 0) {
                                     <td><?= $row['address']; ?></td>
                                     <td><?= $row['regDate']; ?></td>
                                     <td>
-
                                         <a class="edit" name="edit" data-target="#editUser" id="edit" data-id="<?php echo $row["employeeid"]; ?>" data-toggle="modal">
                                             <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
                                         <a href="#deleteUser" class="delete" data-toggle="modal" id="delete" data-id="<?php echo $row["employeeid"]; ?>"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
@@ -269,12 +276,12 @@ if (strlen($_SESSION['login']) == 0) {
 
                             <div class="form-group">
                                 <label>Salary </label>
-                                <input type="number" class="form-control form-control-lg" name="salary" id="salary"/>
+                                <input type="number" class="form-control form-control-lg" name="salary" id="salary" />
                             </div>
 
                             <div class="form-group">
                                 <label> Address </label>
-                                <input type="text" name="address" class="form-control form-control-lg"   id="address" required/>
+                                <input type="text" name="address" class="form-control form-control-lg" id="address" required />
                             </div>
 
                         </div>

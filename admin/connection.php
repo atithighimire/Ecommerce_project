@@ -1,9 +1,9 @@
 <?php
 
-define('DB_SERVER', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'raritan_valley_ecom');
+define('DB_SERVER', 'localhost:3306');
+define('DB_USER', 'ghimira1_atts');
+define('DB_PASS', 'BlueGrass33$$');
+define('DB_NAME', 'ghimira1_raritan_valley_ecom');
 $conn = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
 
 

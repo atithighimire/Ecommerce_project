@@ -1,37 +1,31 @@
 <?php
 session_start();
 error_reporting(0);
-
 include 'connection.php';
 
 
-//Login code for hr
+
 if (isset($_POST['submit'])) {
   $username = $_POST['username'];
   $password = md5($_POST['password']);
-  $stmt = $conn->prepare("SELECT * FROM hr WHERE (username=? || password=?)");
+  $stmt = $conn->prepare("SELECT * FROM hr WHERE username = ? AND password = ?");
   $stmt->bind_param("ss", $username, $password);
   $stmt->execute();
-  $rs = $stmt->fetch();
-  $stmt->close();
-  if ($rs) {
-    $extra = "manageEmployee.php";
-    $_SESSION['login'] = $_POST['username'];
-    $_SESSION['id'] = $num['id'];
+  $result = $stmt->get_result();
+  $row = mysqli_fetch_array($result);
+  if (mysqli_num_rows($result) == 1) {
+    $_SESSION['login'] = $row['username'];
+    $_SESSION['id'] = $row['id'];
     $host = $_SERVER['HTTP_HOST'];
     $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    header("location:http://$host$uri/$extra");
+    echo '<script>window.location.href = "https://'.$host.$uri.'/manageEmployee.php";</script>';
+    $stmt->close();
     exit();
   } else {
-    $extra = "index.php";
-    $username = $_POST['username'];
-    $host  = $_SERVER['HTTP_HOST'];
-    $uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    header("location:http://$host$uri/$extra");
-    $_SESSION['errmsg'] = "Invalid userid id or Password";
-    exit();
+    $_SESSION['errmsg'] = "Invalid HR id or Password";
   }
 }
+
 
 ?>
 

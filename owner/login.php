@@ -5,34 +5,27 @@ error_reporting(0);
 include 'connection.php';
 
 
-//Login code for owner
-
 if (isset($_POST['submit'])) {
   $username = $_POST['username'];
   $password = md5($_POST['password']);
-  $stmt = $conn->prepare("SELECT * FROM owner WHERE (username=? || password=?)");
+  $stmt = $conn->prepare("SELECT * FROM owner WHERE username = ? AND password = ?");
   $stmt->bind_param("ss", $username, $password);
   $stmt->execute();
-  $rs = $stmt->fetch();
-  $stmt->close();
-  if ($rs) {
-    $extra = "manageUsers.php";
+  $result = $stmt->get_result();
+  $row = mysqli_fetch_array($result);
+  if (mysqli_num_rows($result) == 1) {
     $_SESSION['login'] = $_POST['username'];
-    $_SESSION['id'] = $num['id'];
+    $_SESSION['id'] = $row['id'];
     $host = $_SERVER['HTTP_HOST'];
     $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    header("location:http://$host$uri/$extra");
+    echo '<script>window.location.href = "https://'.$host.$uri.'/manageUsers.php";</script>';
+    $stmt->close();
     exit();
   } else {
-    $extra = "index.php";
-    $username = $_POST['username'];
-    $host  = $_SERVER['HTTP_HOST'];
-    $uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    header("location:http://$host$uri/$extra");
-    $_SESSION['errmsg'] = "Invalid userid id or Password";
-    exit();
+    $_SESSION['errmsg'] = "Invalid Ownerid id or Password";
   }
 }
+
 ?>
 
 

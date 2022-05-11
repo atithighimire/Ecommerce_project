@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/style.css">
@@ -28,6 +27,11 @@
             <form class="float-right ml-3">
                 <a href="../owner/index.php" class="btn btn-success">Owner Portal</a>
             </form>
+            
+             <form class="float-right ml-3">
+                <a href="../hr/index.php" class="btn btn-success">HR Portal</a>
+            </form>
+            
 
         </div>
     </nav>

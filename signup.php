@@ -1,6 +1,11 @@
+
 <?php
 session_start();
+error_reporting(0);
 include 'connection.php';
+
+
+
 
 if (isset($_POST['submit'])) {
     $name = $_POST['fullname'];
@@ -24,7 +29,9 @@ if (isset($_POST['submit'])) {
             trigger_error("there was an error...." . $conn->error, E_USER_WARNING);
         } else {
             echo "<script>alert('User has been Registered Please Login ');</script>";
-            header("Location: index.php");
+            $host = $_SERVER['HTTP_HOST'];
+            $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+            echo '<script>window.location.href = "http://'.$host.$uri.'/index.php";</script>';
             $stmti->close();
         }
     }
